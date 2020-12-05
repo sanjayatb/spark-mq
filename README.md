@@ -1,8 +1,7 @@
 # spark-mq
 Mq source for spark
 
-This is overriding spark Source API and given custom read capability to IBM MQ data source.
-u
+This library is custom spark source for read IBM MQ data with custom iterators.
 
 ### Example
 ```
