@@ -1,5 +1,5 @@
 # spark-mq
-Mq source for spark
+Mq source for spark structured streaming
 
 This library is a custom spark source for read IBM MQ data with custom iterators. (XML, JSON, FIXED_WIDTH)
 
