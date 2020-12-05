@@ -49,7 +49,7 @@ public class MQResource implements Serializable {
         this.options.put(TRANSPORT_PROPERTY, TRANSPORT_MQSERIES);
 
         this.errorOptions = new Hashtable<>();
-        this.errorOptions.put(HOST_NAME_PROPERTY, options.get("error: host").getOrElse(new ScalaUtils.DefaultEmptyFunction()));
+        this.errorOptions.put(HOST_NAME_PROPERTY, options.get("error.host").getOrElse(new ScalaUtils.DefaultEmptyFunction()));
         this.errorOptions.put(CHANNEL_PROPERTY, options.get("error.channel").getOrElse(new ScalaUtils.DefaultEmptyFunction()));
         this.errorOptions.put(USER_ID_PROPERTY, options.get("error.user").getOrElse(new ScalaUtils.DefaultEmptyFunction()));
         this.errorOptions.put(PORT_PROPERTY, Integer.parseInt(options.get("error.port").getOrElse(new ScalaUtils.DefaultZeroFunction())));
