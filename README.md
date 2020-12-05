@@ -1,7 +1,7 @@
 # spark-mq
 Mq source for spark
 
-This library is custom spark source for read IBM MQ data with custom iterators.
+This library is a custom spark source for read IBM MQ data with custom iterators. (XML, JSON, FIXED_WIDTH)
 
 ### Example
 ```
