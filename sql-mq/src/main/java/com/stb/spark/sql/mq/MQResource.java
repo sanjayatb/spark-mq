@@ -1,4 +1,4 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueue;
@@ -14,12 +14,14 @@ import java.util.Hashtable;
 
 import static com.ibm.mq.constants.CMQC.*;
 
+/***
+ * MQResource class
+ */
 public class MQResource implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MQResource.class);
 
     public static final int QUEUE_OPEN_OPTION_INQUIRE = MQOO_INQUIRE;
-
     private static final int[] BACKOUT_CONSTANTS = {MQIA_BACKOUT_THRESHOLD, MQCA_BACKOUT_REQ_Q_NAME};
 
     private final Hashtable<String, Object> options;
@@ -61,7 +63,7 @@ public class MQResource implements Serializable {
         if (StringUtils.isBlank(this.errorQueueName)) {
             this.backoutQueue = (String) options.get("backoutQueue").getOrElse(new BackoutFunction());
         } else {
-            LOGGER.info("[{}] gueue.-> using error queue : {}", queueName, errorQueueName);
+            LOGGER.info("[{}] queue -> using error queue : {}", queueName, errorQueueName);
             this.backoutQueue = "";
         }
     }

@@ -1,4 +1,4 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueueManager;
@@ -11,6 +11,9 @@ import java.util.Map;
 
 import static com.ibm.mq.constants.CMQC.HOST_NAME_PROPERTY;
 
+/***
+ * Factory class for create MQ Mangers
+ */
 public class MQManagerFactory {
 
     private MQManagerFactory(){}

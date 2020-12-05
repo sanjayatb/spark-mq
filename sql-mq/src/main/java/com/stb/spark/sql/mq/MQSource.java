@@ -1,13 +1,10 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQGetMessageOptions;
 import com.ibm.mq.MQMessage;
 import com.ibm.mq.MQQueue;
-import org.apache.spark.SparkContext;
-import org.apache.spark.TaskContext;
 import org.apache.spark.rdd.RDD;
-import org.apache.spark.scheduler.SparkListener;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
@@ -30,6 +27,9 @@ import scala.runtime.AbstractFunction1;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * MQSource implements the spark source interface
+ */
 public class MQSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MQSource.class);
@@ -47,11 +47,8 @@ public class MQSource implements Source {
         this.sqlContext = sqlContext;
         this.options = options;
         this.resource = new MQResource(options);
-        SparkListener
         String queueName = resource.getQueueName();
         MQException.logExclude(2033);
-
-        TaskContext.get().taskMetrics().
 
         try {
             this.queue = resource.getQManager().accessQueue(queueName, MQResource.QUEUE_OPEN_OPTION_BROWSE);
@@ -61,6 +58,7 @@ public class MQSource implements Source {
         }
     }
 
+    @Override
     public StructType schema() {
         return MQSourceRDD.SCHEMA;
     }
@@ -76,21 +74,22 @@ public class MQSource implements Source {
             currentOffset.compareAndSet(current, System.currentTimeMillis());
             return Option.apply(new MQSourceOffset(System.currentTimeMillis()));
         } catch (MQException e) {
-           if(e.getReason() == MQException.MQRC_NO_MSG_AVAILABLE){
-               return Option.apply(null);
-           }
-           throw new RuntimeException(e);
+            if (e.getReason() == MQException.MQRC_NO_MSG_AVAILABLE) {
+                return Option.apply(null);
+            }
+            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public Dataset<Row> getBatch(Option<Offset> start, Offset end) {
-        if(end.json().equals(String.valueOf(currentOffset.get()))){
-            MQSourceRDD result = new MQSourceRDD(sqlContext.sparkContext(),resource,options);
-            Function1<byte[],InternalRow> function = new FunctionWrapper();
-            RDD<InternalRow> rowRDD = result.map(function,EVIDENCE);
-            return sqlContext.internalCreateDataFrame(rowRDD,schema(),true);
-        }else {
-            return sqlContext.internalCreateDataFrame(sqlContext.sparkContext().emptyRDD(EVIDENCE),schema(),true);
+        if (end.json().equals(String.valueOf(currentOffset.get()))) {
+            MQSourceRDD result = new MQSourceRDD(sqlContext.sparkContext(), resource, options);
+            Function1<byte[], InternalRow> function = new FunctionWrapper();
+            RDD<InternalRow> rowRDD = result.map(function, EVIDENCE);
+            return sqlContext.internalCreateDataFrame(rowRDD, schema(), true);
+        } else {
+            return sqlContext.internalCreateDataFrame(sqlContext.sparkContext().emptyRDD(EVIDENCE), schema(), true);
         }
     }
 
@@ -105,11 +104,11 @@ public class MQSource implements Source {
         }
     }
 
-    private class FunctionWrapper extends AbstractFunction1<byte[],InternalRow> implements Serializable{
+    private class FunctionWrapper extends AbstractFunction1<byte[], InternalRow> implements Serializable {
 
         @Override
         public InternalRow apply(byte[] bytes) {
-            Seq<Object> result = JavaConversions.asScalaBuffer(Arrays.asList((Object)bytes)).toSeq();
+            Seq<Object> result = JavaConversions.asScalaBuffer(Arrays.asList((Object) bytes)).toSeq();
             return InternalRow.apply(result);
         }
     }

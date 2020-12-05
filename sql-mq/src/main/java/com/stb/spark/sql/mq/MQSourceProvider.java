@@ -1,4 +1,4 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import org.apache.spark.sql.SQLContext;
 import org.apache.spark.sql.execution.streaming.Source;
@@ -9,6 +9,9 @@ import scala.Option;
 import scala.Tuple2;
 import scala.collection.immutable.Map;
 
+/***
+ * Source provider
+ */
 public class MQSourceProvider implements DataSourceRegister, StreamSourceProvider,scala.Serializable {
     @Override
     public String shortName() {

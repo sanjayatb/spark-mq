@@ -1,4 +1,4 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import org.apache.spark.sql.execution.streaming.Offset;
 

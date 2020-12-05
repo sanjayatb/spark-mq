@@ -1,4 +1,4 @@
-package com.stb.spark.mq;
+package com.stb.spark.sql.mq;
 
 import scala.runtime.AbstractFunction0;
 
